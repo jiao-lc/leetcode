@@ -1,40 +1,58 @@
 public class Solution {
     public List<Integer> findSubstring(String s, String[] words) {
-        List<Integer> res = new ArrayList<Integer>();
-        if(words == null || words.length == 0)   return res;
-        int len = words[0].length() * words.length;
-        int unit = words[0].length();
-        if(s.length() < len)    return res;
-        HashMap<String, Integer> dict = init(words);
-        int start = 0, end = 0;
-        for(int i = 0; i <= s.length() - len; i++) {
-            HashMap<String, Integer> map = new HashMap(dict);
-            end = i;
-            while(!map.isEmpty()) {
-                String can = s.substring(end, end + unit);
-                if(map.containsKey(can)) {
-                    map.put(can, map.get(can) - 1);
-                    if(map.get(can) == 0)
-                        map.remove(can);
+        int N = s.length();
+        List<Integer> indexes = new ArrayList<Integer>();
+        if(words.length == 0) return indexes;
+        int M = words[0].length();
+        if(N < M * words.length) return indexes;
+        int last = s.length() - M + 1;
+        
+        //map each string in words array to some index and compute target counters
+        Map<String, Integer> mapping = new HashMap<String, Integer>();
+        int[][] table = new int[2][words.length];
+        int num = 0;
+        for(int i = 0; i < words.length; i++) {
+            Integer mapped = mapping.get(words[i]);
+            if(mapped == null) {
+                mapping.put(words[i], num);
+                num++;
+                mapped = num - 1;
+            }
+            table[0][mapped]++;
+        }
+        
+        //find all occurrences at string S and map them to their current integer, -1 means no such string is in words array
+        int[] smapping = new int[last];
+        for(int i = 0; i < last; i++) {
+            String section = s.substring(i, i + M);
+            Integer mapped = mapping.get(section);
+            smapping[i] = mapped == null ? -1 : mapped;
+        }
+        
+        //fix the number of linear scans
+        for(int i = 0; i < M; i++) { // i = M + 1 is repeated i = 1
+            int current = num;
+            int left = i, right = i;
+            Arrays.fill(table[1], 0);
+            //here, simple solve the minimum-window-substring problem
+            while(right < last) {
+                while(current > 0 && right < last) {
+                    int target = smapping[right];
+                    if(target != -1 && ++table[1][target] == table[0][target])
+                        current--;
+                    right += M;
                 }
-                else break;
-                end += unit;
-            }
-            if(end - i == len)  res.add(i);
-        }
-        return res;
-    }
-    
-    public HashMap<String, Integer> init(String[] words) {
-        HashMap<String, Integer> map = new HashMap<String, Integer>();
-        for(String word : words) {
-            if(!map.containsKey(word)){
-                map.put(word, 1);
-            }
-            else {
-                map.put(word, map.get(word) + 1);
+                while(current == 0 && left < right) {
+                    int target = smapping[left];
+                    if(target != -1 && --table[1][target] == table[0][target] - 1){
+                        int len = right - left;
+                        if(len / M == words.length) indexes.add(left);
+                        current++;
+                    }
+                    left += M;
+                }
             }
         }
-        return map;
+        return indexes;
     }
 }
