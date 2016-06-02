@@ -29,6 +29,6 @@ If there are multiple such windows, you are guaranteed that there will always be
 
 <div>
 
-<div id="similar" class="btn btn-xs btn-warning">Show Similar Problems</div>
+<div id="similar" class="btn btn-xs btn-warning">Hide Similar Problems</div>
 
-<span class="hidebutton">[(H) Substring with Concatenation of All Words](/problems/substring-with-concatenation-of-all-words/) [(M) Minimum Size Subarray Sum](/problems/minimum-size-subarray-sum/) [(H) Sliding Window Maximum](/problems/sliding-window-maximum/)</span></div>
+<span class="hidebutton" style="display: inline;">[(H) Substring with Concatenation of All Words](/problems/substring-with-concatenation-of-all-words/) [(M) Minimum Size Subarray Sum](/problems/minimum-size-subarray-sum/) [(H) Sliding Window Maximum](/problems/sliding-window-maximum/)</span></div>
