@@ -17,7 +17,7 @@ public class Solution {
         int left = 0, right = 0;
         int len = s.length() + 1;
         String ans = "";
-        while(right < s.length()) {
+        while(right < s.length() && left < s.length() - t.length() + 1) {
             while(num != 0 && right < s.length()) {
                 if(map.containsKey(s.charAt(right))) {
                     int target = map.get(s.charAt(right));
