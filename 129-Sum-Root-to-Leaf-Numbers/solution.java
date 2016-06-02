@@ -16,6 +16,7 @@ public class Solution {
     }
     
     public int calculate(int val, TreeNode root) {
+        if(root == null)    return 0;
         int ans = val * 10 + root.val;
         if(root.left == null && root.right == null) {
             return ans;
