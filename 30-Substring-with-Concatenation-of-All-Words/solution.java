@@ -5,10 +5,10 @@ public class Solution {
         int len = words[0].length() * words.length;
         int unit = words[0].length();
         if(s.length() < len)    return res;
-        HashMap<String, Integer> map;
+        HashMap<String, Integer> dict = init(words);
         int start = 0, end = 0;
         for(int i = 0; i <= s.length() - len; i++) {
-            map = init(words);
+            HashMap<String, Integer> map = new HashMap(dict);
             end = i;
             while(!map.isEmpty()) {
                 String can = s.substring(end, end + unit);
