@@ -31,5 +31,7 @@ public class Solution {
         if(root.right != null) {
             helper(res, list, sum, root.right);
         }
+        list.remove(list.size() - 1);
+        sum += root.val;
     }
 }
