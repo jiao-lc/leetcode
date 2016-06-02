@@ -20,15 +20,6 @@ public class Solution {
         if(root.left == null && root.right == null) {
             return ans;
         }
-        if(root.left != null && root.right != null) {
-            return calculate(ans, root.left) + calculate(ans, root.right);
-        }
-        if(root.left != null) {
-            return calculate(ans, root.left);
-        }
-        if(root.right != null) {
-            return calculate(ans, root.right);
-        }
-        return 0;
+        return calculate(ans, root.left) + calculate(ans, root.right);
     }
 }
