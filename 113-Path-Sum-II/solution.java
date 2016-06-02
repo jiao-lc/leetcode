@@ -12,26 +12,21 @@ public class Solution {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
         if(root == null)
             return res;
-        helper(res, new ArrayList<Integer>(), sum, root);
+        helper(root, sum, new ArrayList<Integer>(), res);
         return res;
     }
     
-    public void helper(List<List<Integer>> res, List<Integer> list, int sum, TreeNode root) {
-        list.add(root.val);
-        sum -= root.val;
-        if(root.left == null && root.right == null) {
-            if(sum == 0) {
-                res.add(new ArrayList(list));
-            }
+    private void helper(TreeNode root, int sum, List<Integer> path, List<List<Integer>> res) {
+        if (root == null) return;
+        path.add(root.val);
+        if (root.left == null && root.right == null && root.val == sum) {
+            res.add(new ArrayList<Integer>(path));
+            path.remove(path.size()-1);
             return;
         }
-        if(root.left != null) {
-            helper(res, list, sum, root.left);
-        }
-        if(root.right != null) {
-            helper(res, list, sum, root.right);
-        }
-        list.remove(list.size() - 1);
-        sum += root.val;
+        helper(root.left, sum-root.val, path, res);
+        helper(root.right, sum-root.val, path, res);
+        // backtracking
+        path.remove(path.size()-1);
     }
 }
