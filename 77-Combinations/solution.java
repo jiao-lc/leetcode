@@ -11,7 +11,7 @@ public class Solution {
             res.add(new ArrayList<Integer>(list));
             return;
         }
-        //if(start > end - num + 1)   return;
+        if(num - list.size() > end - start + 1)   return;
         for(int i = start; i < end + 1; i++) {
             list.add(i);
             helper(res, list, i + 1, num, end);
