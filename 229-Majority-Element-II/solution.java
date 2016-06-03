@@ -1,22 +1,37 @@
 public class Solution {
     public List<Integer> majorityElement(int[] nums) {
         List<Integer> res = new ArrayList<Integer>();
-        Arrays.sort(nums);
-        int len = nums.length;
-        if(len == 0)    return res;
-        int i = 0;
-        int tmp = 0;
-        while(i < len - len / 3) {
-            if (nums[i] == nums[i + len / 3]) {
-                tmp = nums[i];
-                res.add(nums[i]);
-                i += len / 3;
-                while (i < len -len / 3 && nums[i] == tmp) i++;
-            }
-            else {
-                i++;
+        if(nums == null || nums.length == 0)    return res;
+        int vote1 = 0, vote2 = 0, can1 = 0, can2 = 1;
+        for(int num : nums) {
+            if(num == can1) {
+                vote1++;
+            }else if(num == can2) {
+                vote2++;
+            }else if(vote1 == 0) {
+                can1 = num;
+                vote1 = 1;
+            }else if(vote2 == 0) {
+                can2 = num;
+                vote2 = 1;
+            }else {
+                vote1--;
+                vote2--;
             }
         }
+        
+        vote1 = 0;
+        vote2 = 0;
+        for(int num : nums) {
+            if(num == can1) vote1 += 2;
+            else    vote1--;
+            if(num == can2) vote2 += 2;
+            else    vote2--;
+        }
+        
+        if(vote1 > 0)   res.add(can1);
+        if(vote2 > 0)   res.add(can2);
+        
         return res;
     }
 }
