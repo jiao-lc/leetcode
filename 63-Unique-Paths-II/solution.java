@@ -7,7 +7,6 @@ public class Solution {
         path[0] = 1;
         for(int i = 0; i < m; i++) {
             for(int j = 0; j < n; j++) {
-                System.out.println(obstacleGrid[i][j]);
                 if(obstacleGrid[i][j] == 1)
                     path[j] = 0;
                 else
