@@ -12,6 +12,8 @@
 public class Solution {
     public boolean hasCycle(ListNode head) {
         ListNode h1 = head;
+        if(h1 == null)
+            return false;
         ListNode h2 = head.next;
         while(h1 != null && h2 != null && h2.next != null && h1 != h2) {
             h1 = h1.next;
