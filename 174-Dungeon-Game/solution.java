@@ -1,20 +1,38 @@
 public class Solution {
-    
-public int calculateMinimumHP(int[][] dungeon) {
-    return calculateMinimumHP(dungeon, 0, 0, new int[dungeon.length][dungeon[0].length]);
-}
+    public int calculateMinimumHP(int[][] dungeon) {
+        if(dungeon == null || dungeon.length == 0 || dungeon[0].length == 0){//[],[[]]
+            return 0;
+        }
+        int[][] flag = new int[dungeon.length][dungeon[0].length];
+        int min = dfs(dungeon, flag, 0, 0);
+        return min;
+    }
 
-private int calculateMinimumHP(int[][] dungeon, int x, int y, int[][] dp) {
-    if(dp[x][y] != 0) return dp[x][y];
-    int m = dungeon.length, n = dungeon[0].length;
-    if(x == m - 1 && y == n-1)
-        return dungeon[x][y] >= 0 ? 1 : 1 - dungeon[x][y];
-    int min = Integer.MAX_VALUE;
-    if(x + 1 < m)
-        min = Math.min(min, calculateMinimumHP(dungeon, x+1, y, dp));
-    if(y + 1 < n)
-        min = Math.min(min, calculateMinimumHP(dungeon, x, y+1, dp));
-    dp[x][y] = dungeon[x][y] > 0 ? (dungeon[x][y] >= min ? 1 : min - dungeon[x][y]) : min - dungeon[x][y];
-    return dp[x][y];
-}
+    private int dfs(int[][] dungeon, int[][] flag, int x, int y){
+        if(flag[x][y] != 0){
+            return flag[x][y];
+        }
+        if(x == dungeon.length - 1 && y == dungeon[0].length - 1){//The down-right corner
+            flag[x][y] = dungeon[x][y] < 0 ? -dungeon[x][y] + 1 : 1; //The minimum is 1
+            return flag[x][y];
+        }
+        int min = Integer.MAX_VALUE;
+        //go down
+        if(x < dungeon.length - 1){
+            int down = dfs(dungeon, flag, x + 1, y);
+            min = min < down ? min : down; 
+        }
+        //go right
+        if(y < dungeon[0].length - 1){
+            int right = dfs(dungeon, flag, x, y + 1);
+            min = min < right ? min : right;
+        }
+        if(dungeon[x][y] >= min){//If min is 6, dungeon[x][y] if 10, then min should be updated to 1
+            min = 1;
+        }else{//If min is 6, dungeon[x][y] is 3 or -3, then min should be updated to 3 or 9
+            min = min - dungeon[x][y];
+        }
+        flag[x][y] = min;
+        return min;
+    }
 }
