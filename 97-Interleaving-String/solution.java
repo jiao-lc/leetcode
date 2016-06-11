@@ -1,36 +1,19 @@
 public class Solution {
-    public boolean isInterleave(String s1, String s2, String s3) {
-        int l1 = s1.length(), l2 = s2.length(), l3 = s3.length();
-        boolean[][] dp = new boolean[l1 + 1][l2 + 1];
-        if(l1 + l2 != l3)   {return false;}
-        if(l1 == 0 && l2 == 0 && l3 == 0)  return true;
-        
-        for(int i = 1; i < l1 + 1; i++) {
-            if((i == 1 || i != 1 && dp[i - 1][0] == true) && s3.charAt(i - 1) == s1.charAt(i - 1)) {
-                dp[i][0] = true;
-            } else {
-                break;
-            }
-        }
-        for(int i = 1; i < l2 + 1; i++) {
-            if((i == 1 || i != 1 && dp[0][i - 1] == true) && s3.charAt(i - 1) == s2.charAt(i - 1)) {
-                dp[0][i] = true;
-            } else {
-                break;
-            }
-        }
-        
-        for(int i = 1; i < l1 + 1; i++) {
-            for(int j = 1; j < l2 + 1; j++) {
-                if(dp[i - 1][j] && s3.charAt(i + j - 1) == s1.charAt(i - 1)) {
-                    dp[i][j] = true;
-                } else {
-                    if(dp[i][j - 1] && s3.charAt(i + j - 1) == s2.charAt(j - 1)) {
-                        dp[i][j] = true;
-                    }
-                }
-            }
-        }
-        return dp[l1][l2];
-    }
+    
+public boolean isInterleave(String s1, String s2, String s3) {
+    char[] c1 = s1.toCharArray(), c2 = s2.toCharArray(), c3 = s3.toCharArray();
+    int m = s1.length(), n = s2.length();
+    if(m + n != s3.length()) return false;
+    return dfs(c1, c2, c3, 0, 0, 0, new boolean[m + 1][n + 1]);
+}
+
+public boolean dfs(char[] c1, char[] c2, char[] c3, int i, int j, int k, boolean[][] invalid) {
+    if(invalid[i][j]) return false;
+    if(k == c3.length) return true;
+    boolean valid = 
+        i < c1.length && c1[i] == c3[k] && dfs(c1, c2, c3, i + 1, j, k + 1, invalid) || 
+        j < c2.length && c2[j] == c3[k] && dfs(c1, c2, c3, i, j + 1, k + 1, invalid);
+    if(!valid) invalid[i][j] = true;
+    return valid;
+}
 }
