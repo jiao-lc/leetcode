@@ -11,12 +11,11 @@ public class Solution {
         for(int i = 1; i <= plen; i++) {
             for(int j = 1; j <= slen; j++) {
                 if (p.charAt(i - 1) == '*') {
-                    if(dp[i][j - 1] || dp[i - 1][j - 1] && i > 1 && (p.charAt(i - 2) == s.charAt(i - 1) || p.charAt(i - 2) == '?')) {
+                    if(dp[i][j - 1] || dp[i - 1][j - 1] || dp[i - 1][j]) {
                         dp[i][j] = true;
                     }
-                    if(dp[i - 1][j]) {dp[i][j] = true;}
                 } 
-                if(dp[i - 1][j - 1] && (p.charAt(i - 1) == s.charAt(i - 1) || p.charAt(i - 1) == '?')){
+                if(dp[i - 1][j - 1] && (p.charAt(i - 1) == s.charAt(j - 1) || p.charAt(i - 1) == '?')){
                     dp[i][j] = true;
                 }
             }
