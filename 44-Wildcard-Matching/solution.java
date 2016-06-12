@@ -22,24 +22,17 @@ public class Solution {
         }
         
         
-        for(int i = 1; i < plen; i++) {
+        for(int i = 0; i < plen; i++) {
             for(int j = 0; j < slen; j++) {
                 if (p.charAt(i) == '*') {
-                    if( j > 0 && (dp[i][j - 1] || dp[i - 1][j - 1]) || dp[i - 1][j]) {
+                    if( j > 0 && (dp[i][j - 1] || i > 0 && dp[i - 1][j - 1]) || i > 0 && dp[i - 1][j]) {
                         dp[i][j] = true;
                     }
-                } else if((p.charAt(i) == '?' || p.charAt(i) == s.charAt(j)) && j > 0 && dp[i - 1][j - 1]) {
+                } else if((p.charAt(i) == '?' || p.charAt(i) == s.charAt(j)) && j > 0 && i > 0 && dp[i - 1][j - 1]) {
                     dp[i][j] = true;
                 }
             }
             //if(dp[i][slen - 1]) return true;
-        }
-        for(int i = 0; i < plen; i++) {
-            for(int j = 0; j < slen; j++) {
-                System.out.print(dp[i][j]);
-                System.out.print(" ");
-            }
-            System.out.println();
         }
         return dp[plen - 1][slen - 1];
     }
