@@ -1,6 +1,7 @@
 public class Solution {
     public boolean isMatch(String s, String p) {
         int slen = s.length(), plen = p.length();
+        if(slen == 0)   return true;
         boolean[][] dp = new boolean[plen][slen];
         for(int i = 0; i < slen; i++) {
             if(s.charAt(i) == p.charAt(0)) {
@@ -27,13 +28,7 @@ public class Solution {
                 }
             }
         }
-        for(int i = 0; i < plen; i++) {
-            for(int j = 0; j < slen; j++) {
-                System.out.print(dp[i][j]);
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
+
         
         return dp[plen - 1][slen - 1];
     }
