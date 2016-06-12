@@ -1,35 +1,29 @@
 public class Solution {
     public boolean isMatch(String s, String p) {
         int slen = s.length(), plen = p.length();
-        if(slen == 0)   return true;
-        boolean[][] dp = new boolean[plen][slen];
-        for(int i = 0; i < slen; i++) {
-            if(s.charAt(i) == p.charAt(0)) {
-                dp[0][i] = true;
-            }
-        }
-        for(int i = 0; i < plen; i++) {
-            if(s.charAt(0) == p.charAt(i)) {
-                dp[i][0] = true;
-            }
-        }
-        for(int i = 1; i < plen; i++) {
-            for(int j = 1; j < slen; j++) {
-                if(p.charAt(i) == '.') {
-                    dp[i][j] = true;
-                } else if (p.charAt(i) == '*' && (p.charAt(i - 1) == s.charAt(j) || p.charAt(i - 1) =='.')) {
-                    if(dp[i][j - 1] || dp[i - 1][j - 1]) {
-                        dp[i][j] = true;
-                    }
-                } else if(dp[i - 1][j] && p.charAt(i) == '*') {
-                    dp[i][j] = true;
-                }else if(p.charAt(i) == s.charAt(j) && dp[i - 1][j - 1]) {
-                    dp[i][j] = true;
+        if(slen == 0 && plen == 0 || p.equals(".*"))   return true;
+        boolean[][] dp = new boolean[plen + 1][slen + 1];
+
+        dp[0][0] = true;
+        for(int i = 1; i <= plen; i++) {
+            if(p.charAt(i - 1) == '*') {
+                if(i != 1) {
+                    dp[i][0] = dp[i - 2][0];
                 }
             }
         }
+        for(int i = 1; i <= plen; i++) {
+            for(int j = 1; j <= slen; j++) {
+                if(p.charAt(i - 1) == '*') {
+                    if(i >= 2 && dp[i - 2][j]) { dp[i][j] = true;}
+                    if(dp[i - 1][j]) {dp[i][j] = true;}
+                    if((dp[i - 1][j - 1] || dp[i][j - 1]) && i >= 2 && (p.charAt(i - 2) == s.charAt(j - 1) || p.charAt(i - 2) == '.')) {dp[i][j] = true;}
+                }
+                if(dp[i - 1][j - 1] && (p.charAt(i - 1) == s.charAt(j - 1) || p.charAt(i - 1) == '.')) {dp[i][j] = true;}
+            }
+            //if(dp[i][slen - 1]) return true;
+        }
 
-        
-        return dp[plen - 1][slen - 1];
+        return dp[plen][slen];
     }
 }
