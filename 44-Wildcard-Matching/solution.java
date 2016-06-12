@@ -1,26 +1,39 @@
 public class Solution {
     public boolean isMatch(String s, String p) {
-        int slen = s.length(), plen = p.length();
-        if((slen == 0 && plen == 0) || p.equals("*"))   return true;
-        boolean[][] dp = new boolean[plen + 1][slen + 1];
+        int saved_p=-1, saved_s=-1;
+        int indexP=0;
+        for(int indexS=0; indexS<s.length();){
 
-        dp[0][0] = true;
-        for(int i = 1; i < plen + 1; i++) {
-            if(p.charAt(i - 1) == '*')  dp[i][0] = dp[i - 1][0];
-        }
-        for(int i = 1; i <= plen; i++) {
-            for(int j = 1; j <= slen; j++) {
-                if (p.charAt(i - 1) == '*') {
-                    if(dp[i][j - 1] || dp[i - 1][j - 1] || dp[i - 1][j]) {
-                        dp[i][j] = true;
-                    }
-                } 
-                if(dp[i - 1][j - 1] && (p.charAt(i - 1) == s.charAt(j - 1) || p.charAt(i - 1) == '?')){
-                    dp[i][j] = true;
-                }
+            if(indexP<p.length() && (s.charAt(indexS)==p.charAt(indexP)||p.charAt(indexP)=='?')){
+                //match to a single character
+                indexP++;
+                indexS++;
             }
-            //if(dp[i][slen - 1]) return true;
+            else if(indexP<p.length() && p.charAt(indexP)=='*'){
+                // go into the * state, we need to save the P next position and save S next position
+                // when any mismatch happen, we can revert the search to it previous state '*'
+                saved_p=indexP;
+                //move the saved_s, next time it should skip current one
+                saved_s=indexS+1;
+                indexP++;
+            }
+            else if(saved_p!=-1){
+                //means not match, we need to revert 
+                indexP=saved_p;
+                indexS=saved_s;
+            }
+            else{
+                //means not match, but not wildcard
+                return false;
+            }
         }
-        return dp[plen][slen];
+        //examine the left char in the pattern
+        //they should all be '*' if any char left
+        for(int index=indexP; index<p.length();index++){
+            if(p.charAt(index)!='*'){
+                return false;
+            }
+        }
+        return true;
     }
 }
