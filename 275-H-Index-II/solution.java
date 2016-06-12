@@ -1,10 +1,17 @@
 public class Solution {
     public int hIndex(int[] citations) {
         if(citations.length == 0)   return 0;
-        int i = citations.length - 1;
-        for(; i >= 0; i--) {
-            if(citations.length - i > citations[i]) break;
+        int len = citations.length;
+        int e = citations.length - 1, s = 0;
+        while(s <= e) {
+            int m = (s + e) / 2;
+            if(len - m == citations[m])    return citations[m];
+            if(len - m > citations[m]) {
+                s = m + 1;
+            } else {
+                e = m - 1;
+            }
         }
-        return citations.length - i - 1;
+        return len - s;
     }
 }
