@@ -9,6 +9,7 @@
 public class Solution {
     public ListNode deleteDuplicates(ListNode head) {
         ListNode dummy = new ListNode(0);
+        dummy.next = head;
         ListNode pre = dummy;
         if(head == null)    return null;
         int c = head.val;
