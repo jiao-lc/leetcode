@@ -1,17 +1,21 @@
 public class Solution {
-    public int maximalSquare(char[][] a) {
-        if (a == null || a.length == 0 || a[0].length == 0)    return 0;
-        int max = 0, n = a.length, m = a[0].length;
-        int[][] dp = new int[n + 1][m + 1];
-
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= m; j++) {
-                if (a[i - 1][j - 1] == '1') {
-                    dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1])) + 1;
-                    max = Math.max(max, dp[i][j]);
-                }
+public int maximalSquare(char[][] matrix) {
+    if (matrix.length == 0)
+        return 0;
+    int m = matrix.length, n = matrix[0].length;
+    int[] dp = new int[n + 1];
+    int a = 0;
+    for (int i = 0; i < m; ++i)
+        for (int j = 0; j < n; ++j) {
+            if (matrix[i][j] == '0')
+                dp[j + 1] = 0;
+            else {
+                int k = Math.min(dp[j], dp[j + 1]);
+                if (matrix[i - k][j - k] == '1') ++k;
+                dp[j + 1] = k;
+                a = Math.max(a, k);
             }
         }
-        return max * max;
-    }
+    return a * a;
+}
 }
