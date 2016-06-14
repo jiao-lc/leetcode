@@ -11,13 +11,19 @@ public class Solution {
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<Integer>();
         if(root == null)    return res;
-        helper(res, root);
+        Stack<TreeNode> s = new Stack<TreeNode>();
+        while(!s.empty() || root != null) {
+            if(root != null) {
+                res.add(root.val);
+                s.push(root.right);
+                s.push(root.left);
+                root = s.pop();
+            } else {
+                while(!s.empty() && root == null)   root = s.pop();
+            }
+        }
+        
         return res;
     }
     
-    public void helper(List<Integer> res, TreeNode root) {
-        res.add(root.val);
-        if(root.left != null)   helper(res, root.left);
-        if(root.right != null)  helper(res, root.right);
-    }
 }
