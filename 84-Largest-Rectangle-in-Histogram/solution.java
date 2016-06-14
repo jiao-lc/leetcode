@@ -1,25 +1,23 @@
 public class Solution {
-    public int largestRectangleArea(int[] heights) {
-        if (heights == null || heights.length == 0) return 0;
-        return getMax(heights, 0, heights.length);
-    }    
-    int getMax(int[] heights, int s, int e) {
-        if (s + 1 >= e) return heights[s];
-        int min = s;
-        boolean sorted = true;
-        for (int i = s; i < e; i++) {
-            if (i > s && heights[i] < heights[i - 1]) sorted = false;
-            if (heights[min] > heights[i]) min = i;
+
+public int largestRectangleArea(int[] height)
+{
+    if (height == null || height.length < 1)
+        return 0;
+    int[] stack = new int[height.length + 1];
+    int len = 0, max = 0;
+    for (int i = 0; i <= height.length; i++)
+    {
+        int h = (i == height.length) ? 0 : height[i];
+        while (len != 0 && (i == height.length || height[stack[len - 1]] > h))
+        {
+            if (len == 1)
+                max = Math.max(height[stack[--len]] * i, max);
+            else
+                max = Math.max(height[stack[--len]] * (i - stack[len - 1] - 1), max);
         }
-        if (sorted) {
-            int max = 0;
-            for (int i = s; i < e; i++) {
-                max = Math.max(max, heights[i] * (e - i));
-            }
-            return max;
-        }
-        int left = (min > s) ? getMax(heights, s, min) : 0;
-        int right = (min < e - 1) ? getMax(heights, min + 1, e) : 0;
-        return Math.max(Math.max(left, right), (e - s) * heights[min]);
+        stack[len++] = i;
     }
+    return max;
+}
 }
