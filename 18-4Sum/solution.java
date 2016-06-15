@@ -6,7 +6,9 @@ public class Solution {
         HashMap<Integer, List<Integer>> map = new HashMap<>();
         HashSet<List<Integer>> res = new HashSet<>();
         for(int i = 0; i < len - 1; i++) {
+            if (i > 1 && nums[i] == nums[i - 2]) continue; //speed up
             for(int j = i + 1; j < len; j++) {
+                if (j > i + 2 && nums[j] == nums[j - 2]) continue; //speed up
                 int twoSum = nums[i] + nums[j];
                 if(map.containsKey(target - twoSum)) {
                     List<Integer> ls = map.get(target - twoSum);
