@@ -3,6 +3,7 @@ public class Solution {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
         if(nums.length == 0) return res;
         boolean[] visited = new boolean[nums.length];
+        Arrays.sort(nums);
         helper(res, new ArrayList<Integer>(), nums, visited);
         return res;
     }
