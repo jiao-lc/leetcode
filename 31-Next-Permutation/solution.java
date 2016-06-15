@@ -24,6 +24,8 @@ public class Solution {
             int tmp = nums[start];
             nums[start] = nums[end];
             nums[end] = tmp;
+            start++;
+            end--;
         }
     }
 }
