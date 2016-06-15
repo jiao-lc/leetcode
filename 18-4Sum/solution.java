@@ -1,43 +1,53 @@
 public class Solution {
-    public List<List<Integer>> fourSum(int[] nums, int target) {
-        int len = nums.length;
-        if(len == 0) return new ArrayList<List<Integer>>();
-        Arrays.sort(nums);
-        HashMap<Integer, List<Integer>> map = new HashMap<>();
-        HashSet<List<Integer>> res = new HashSet<>();
-        for(int i = 0; i < len - 1; i++) {
-            if (i > 1 && nums[i] == nums[i - 2]) continue; //speed up???
-            for(int j = i + 1; j < len; j++) {
-                if (j > i + 2 && nums[j] == nums[j - 2]) continue; //speed up???
-                int twoSum = nums[i] + nums[j];
-                if(map.containsKey(target - twoSum)) {
-                    List<Integer> ls = map.get(target - twoSum);
-                    for(Integer k : ls) {
-                        int m1 = Math.min(k / nums.length, i);  // m1 will always be the smallest index
-                        int m2 = Math.min(k % nums.length, j);  // m2 will be one of the middle two indices
-                        int m3 = Math.max(k / nums.length, i);  // m3 will be one of the middle two indices
-                        int m4 = Math.max(k % nums.length, j);  // m4 will always be the largest index
-                        
-                        if(m1 == m3 || m1 == m4 || m2 == m3 || m2 == m4)    continue;
-                        if(m2 > m3) {
-                            res.add(Arrays.asList(nums[m1], nums[m3], nums[m2], nums[m4]));
-                        } else {
-                            res.add(Arrays.asList(nums[m1], nums[m2], nums[m3], nums[m4]));
-                        }
-                    }
-                }
-                if(!map.containsKey(twoSum)) {
-                    List<Integer> list = new ArrayList<Integer>();
-                    list.add(i * len + j);
-                    map.put(twoSum, list);
+    public List<List<Integer>> fourSum(int[] num, int target) {
+        //Create the dictionary.
+        HashMap<Integer, ArrayList<ArrayList<Integer>>> dict = new HashMap<>();
+        for (int i = 0; i < num.length - 1; i++) {
+            for (int j = i + 1; j < num.length; j++) {
+                int sum = num[i] + num[j];
+                ArrayList<Integer> pair = new ArrayList<>(2);
+                pair.add(i);
+                pair.add(j);
+                if (!dict.containsKey(sum)) {
+                    ArrayList<ArrayList<Integer>> value = new ArrayList<>();
+                    value.add(pair);
+                    dict.put(sum, value);
                 } else {
-                    List<Integer> list = map.get(twoSum);
-                    list.add(i * len + j);
-                    map.put(twoSum, list);
+                    ArrayList<ArrayList<Integer>> value = dict.get(sum);
+                    value.add(pair);
                 }
             }
         }
-        
-        return new ArrayList<List<Integer>>(res);
+        //Use HashSet to prevent duplicate result.
+        HashSet<ArrayList<Integer>> set = new HashSet<>();
+        for (Integer sum : dict.keySet()) {
+            ArrayList<ArrayList<Integer>> sumPair = dict.get(sum);
+            if (dict.containsKey(target - sum)) {
+                if (target - sum == sum && sumPair.size() == 1)
+                    continue;
+                ArrayList<ArrayList<Integer>> pairs = dict.get(target - sum);
+                for (ArrayList<Integer> pair1 : sumPair) {
+                    for (ArrayList<Integer> pair2 : pairs) {
+                        //Make sure it is not the same pair.
+                        if (pair1 == pair2)
+                            continue;
+                        //Make sure there is no same element in two pairs.
+                        if (pair1.contains(pair2.get(0)) || pair1.contains(pair2.get(1)))
+                            continue;
+                        ArrayList<Integer> tmpResult = new ArrayList<>(4);
+                        tmpResult.add(num[pair1.get(0)]);
+                        tmpResult.add(num[pair1.get(1)]);
+                        tmpResult.add(num[pair2.get(0)]);
+                        tmpResult.add(num[pair2.get(1)]);
+                        //Sort the list and add it into the set.
+                        Collections.sort(tmpResult);
+                        set.add(tmpResult);
+                    }
+                }
+            }
+        }
+        List<List<Integer>> ret = new LinkedList<>();
+        ret.addAll(set);
+        return ret;
     }
 }
