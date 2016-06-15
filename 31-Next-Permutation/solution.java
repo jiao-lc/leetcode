@@ -4,7 +4,7 @@ public class Solution {
         int i = len - 2;
         while(i >= 0 && nums[i] >= nums[i+1]) i--;
         if(i < 0) {
-            Arrays.sort(nums);
+            reverse(nums, 0);
             return;
         }
         int j = i + 1;
@@ -15,6 +15,15 @@ public class Solution {
         int tmp = nums[j];
         nums[j] = nums[i];
         nums[i] = tmp;
-        Arrays.sort(nums, i + 1, len);
+        reverse(nums, i + 1);
+    }
+    
+    public void reverse(int[] nums, int start) {
+        int end = nums.length - 1;
+        while(start < end) {
+            int tmp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = tmp;
+        }
     }
 }
