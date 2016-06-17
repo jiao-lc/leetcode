@@ -2,24 +2,27 @@ public class Solution {
     public List<List<String>> partition(String s) {
         List<List<String>> res = new ArrayList<List<String>>();
         if(s.length() == 0) return res;
-        helper(res, new ArrayList<String>(), s, 0, s.length());
+        char[] c = s.toCharArray();
+        int len = c.length;
+        boolean[][] p = new boolean[len][len];
+        for(int i = 0; i < len; i++) {
+            for(int j = 0; j < len - i; j++) {
+                p[j][j + i] = c[j] == c[j + i] && (i <= 1 || p[j + 1][j + i - 1]);
+            }
+        }
+        path(0, res, new ArrayList<String>(), s, p);
         return res;
     }
-    public void helper(List<List<String>> res, List<String> tmp, String s, int h, int e) {
-        if(h == e) {
+    public void path(int pos, List<List<String>> res, List<String> tmp, String s, boolean[][] p) {
+        if(pos == s.length()) {
             res.add(new ArrayList<String>(tmp));
             return;
         }
-        int p = h * 2;
-        for( ; p <= h + e - 1; p++) {
-            String t1 = s.substring(h, p / 2 + 1);
-            StringBuilder sb = new StringBuilder(t1);
-            sb = sb.reverse();
-            int tail = p % 2 == 0 ? p + 1 - h : p - h + 3 / 2;
-            String t2 = p % 2 == 0 ? s.substring(p / 2, tail): s.substring(p / 2 + 1, tail);
-            if(t2.equals(sb.toString())) {
-                tmp.add(s.substring(h, tail));
-                helper(res, tmp, s, tail, e);
+
+        for(int i = pos; i < s.length(); i++) {
+            if(p[pos][i]) {
+                tmp.add(s.substring(pos, i + 1));
+                path(i + 1, res, tmp, s, p);
                 tmp.remove(tmp.size() - 1);
             }
         }
