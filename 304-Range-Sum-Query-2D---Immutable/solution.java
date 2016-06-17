@@ -1,6 +1,7 @@
 public class NumMatrix {
     public int[][] sum;
     public NumMatrix(int[][] matrix) {
+        if(matrix.length == 0)  sum = null;
         int m = matrix.length, n = matrix[0].length;
         int[][] sum = new int[m][n];
         this.sum = sum;
