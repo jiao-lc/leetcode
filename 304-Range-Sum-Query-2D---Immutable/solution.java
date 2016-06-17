@@ -2,6 +2,8 @@ public class NumMatrix {
     public int[][] sum;
     public NumMatrix(int[][] matrix) {
         int m = matrix.length, n = matrix[0].length;
+        int[][] sum = new int[m][n];
+        this.sum = sum;
         for(int i = 0; i < m; i++) {
             int c = 0;
             for(int j = 0; j < n; j++) {
