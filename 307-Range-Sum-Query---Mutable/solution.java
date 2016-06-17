@@ -1,67 +1,73 @@
 public class NumArray {
-    class TreeNode {
-        int start = 0;
-        int end = 0;
-        int sum = 0;
-        TreeNode left = null;
-        TreeNode right = null;
+    private class SegmentTreeNode {
+        public int start;
+        public int end;
+        public int sum;
+        public SegmentTreeNode left, right;
+        public SegmentTreeNode(int start, int end) {
+            this.start = start;
+            this.end = end;
+            this.sum = 0;
+        }
     }
-    TreeNode root = null;
-    public void init(int[] nums) {
-        if(nums == null || nums.length == 0) return;
-        this.root = buildTree(0, nums.length-1, nums);
-    }
-    public TreeNode buildTree(int start, int end, int[] data) {
-        TreeNode t = new TreeNode();
-        t.start = start;
-        t.end = end;
-        if(start == end) {
-            t.sum = data[start];
-            return t;
-        }        
-        int mid = start + (end-start)/2;
-        t.left = buildTree(start, mid, data);
-        t.right = buildTree(mid+1, end, data);
-        t.sum = t.left.sum + t.right.sum;
-        return t;
-    }
+    
+    private SegmentTreeNode root;
+    
     public NumArray(int[] nums) {
-         init(nums);
+        this.root = buildTree(nums, 0, nums.length - 1);    
     }
 
-    public void updateTree(TreeNode node, int index, int val) {
-        if(node == null) return;
-        if(node.start == node.end) {
+    public void update(int i, int val) {
+        update(root, i, val);
+    }
+    
+    private void update(SegmentTreeNode node, int position, int val) {
+        if(node.start == position && node.end == position) {
             node.sum = val;
             return;
         }
-        int mid = node.start + (node.end - node.start)/2;
-        if(index <= mid) {
-            updateTree(node.left, index, val);
-        }else {
-            updateTree(node.right, index, val);
+        int mid = node.start + (node.end - node.start) / 2;
+        if(position <= mid) {
+            update(node.left, position, val);
+        } else {
+            update(node.right, position, val);
         }
         node.sum = node.left.sum + node.right.sum;
     }
-    
-    void update(int i, int val) {
-        updateTree(this.root, i, val);
-    }
 
-    public int queryTree(TreeNode node, int left, int right) {
-        if(node == null) return 0;
-        if(node.start == left && node.end == right) return node.sum;
-        int mid = node.start + (node.end - node.start)/2;
-        if(mid >= right) {
-            return queryTree(node.left, left, right);
-        }else if(mid < left) {
-            return queryTree(node.right, left, right);
-        }else {
-            return queryTree(node.left, left, mid) + queryTree(node.right, mid+1, right);
+    public int sumRange(int i, int j) {
+        return sumRange(root, i, j);
+    }
+    
+    private int sumRange(SegmentTreeNode node, int lo, int hi) {
+        if(node.start == lo && node.end == hi) {
+            return node.sum;
+        }
+        int mid = node.start + (node.end - node.start) / 2;
+        if(hi <= mid) {
+            return sumRange(node.left, lo, hi);
+        } else if (lo > mid) {
+            return sumRange(node.right, lo, hi);
+        } else {
+            return sumRange(node.left, lo, mid) + sumRange(node.right, mid + 1, hi);
         }
     }
-    public int sumRange(int i, int j) {
-        return queryTree(root, i, j);
+    
+    private SegmentTreeNode buildTree(int[] nums, int lo, int hi) {
+        if(lo > hi) {
+            return null;
+        } else {
+            SegmentTreeNode node = new SegmentTreeNode(lo, hi);
+            if(lo == hi) {
+                node.sum = nums[lo];
+            } else {
+                int mid = lo + (hi - lo) / 2;
+                node.left = buildTree(nums, lo, mid);
+                node.right = buildTree(nums, mid + 1, hi);
+                node.sum = node.left.sum + node.right.sum;
+            }
+            return node;
+        }
     }
 }
 
