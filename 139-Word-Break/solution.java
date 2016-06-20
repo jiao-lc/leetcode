@@ -20,7 +20,7 @@ public class Solution {
                 for(String str : array) {
                     int l = str.length();   //System.out.println(s.substring(i - 1, i + l - 1));
                     if(s.substring(i - 1, i + l - 1).equals(str))   res[i + l - 1] = res[i - 1];
-                    if(i < len && s.charAt(i) > str.charAt(1))  break;
+                    if(i < len && s.substring(i - 1, i + 1).compareTo(str) > 0)  break;
                 }
             }
             //System.out.println(res[i]);
