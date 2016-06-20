@@ -6,6 +6,7 @@ public class Solution {
         while(t < strs[0].length()) {
             char c = strs[0].charAt(t);
             for(String str : strs) {
+                if(t == str.length())   return str;
                 if(str.charAt(t) != c)  return str.substring(0, t);
             }
             t++;
