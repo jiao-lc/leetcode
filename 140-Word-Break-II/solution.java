@@ -1,23 +1,24 @@
 public class Solution {
-    public List<String> wordBreak(String s, Set<String> wordDict) {
-        List<String> res = new ArrayList<String>();
-        if(s == null || s.length() == 0)    return res;
-        helper(res, new StringBuilder(), 0, wordDict, s);
-        return res;
-    }
-    public void helper(List<String> res, StringBuilder sb, int start, Set<String> wordDict, String s) {
-        if(start == s.length()) {
-            res.add(sb.toString());
-            return;
-        }
-        for(int i = start + 1; i <= s.length(); i++) {
-            if(wordDict.contains(s.substring(start, i))) {
-                int t = sb.length();
-                if(sb.length() != 0)    sb.append(" ");
-                sb.append(s.substring(start, i));
-                helper(res, sb, i, wordDict, s);
-                sb.delete(t, sb.length());
+    public List<String> wordBreak(String s, Set<String> dict) {
+        Map<Integer, List<String>> validMap = new HashMap<Integer, List<String>>();
+
+        // initialize the valid values
+        List<String> l = new ArrayList<String>();
+        l.add("");
+        validMap.put(s.length(), l);
+
+        // generate solutions from the end
+        for(int i = s.length() - 1; i >= 0; i--) {
+            List<String> values = new ArrayList<String>();
+            for(int j = i + 1; j <= s.length(); j++) {
+                if (dict.contains(s.substring(i, j))) {
+                    for(String word : validMap.get(j)) {
+                        values.add(s.substring(i, j) + (word.isEmpty() ? "" : " ") + word);
+                    }
+                }
             }
+            validMap.put(i, values);
         }
+        return validMap.get(0);
     }
 }
