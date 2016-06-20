@@ -1,24 +1,26 @@
 public class Solution {
-    public List<String> wordBreak(String s, Set<String> dict) {
-        Map<Integer, List<String>> validMap = new HashMap<Integer, List<String>>();
+public List<String> wordBreak(String s, Set<String> wordDict) {
+    return DFS(s, wordDict, new HashMap<String, LinkedList<String>>());
+}       
 
-        // initialize the valid values
-        List<String> l = new ArrayList<String>();
-        l.add("");
-        validMap.put(s.length(), l);
+// DFS function returns an array including all substrings derived from s.
+List<String> DFS(String s, Set<String> wordDict, HashMap<String, LinkedList<String>>map) {
+    if (map.containsKey(s)) 
+        return map.get(s);
 
-        // generate solutions from the end
-        for(int i = s.length() - 1; i >= 0; i--) {
-            List<String> values = new ArrayList<String>();
-            for(int j = i + 1; j <= s.length(); j++) {
-                if (dict.contains(s.substring(i, j))) {
-                    for(String word : validMap.get(j)) {
-                        values.add(s.substring(i, j) + (word.isEmpty() ? "" : " ") + word);
-                    }
-                }
-            }
-            validMap.put(i, values);
+    LinkedList<String>res = new LinkedList<String>();     
+    if (s.length() == 0) {
+        res.add("");
+        return res;
+    }               
+    for (String word : wordDict) {
+        if (s.startsWith(word)) {
+            List<String>sublist = DFS(s.substring(word.length()), wordDict, map);
+            for (String sub : sublist) 
+                res.add(word + (sub.isEmpty() ? "" : " ") + sub);               
         }
-        return validMap.get(0);
-    }
+    }       
+    map.put(s, res);
+    return res;
+}  
 }
