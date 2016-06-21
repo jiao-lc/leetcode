@@ -5,24 +5,20 @@ public class Solution {
             map.put(n, map.getOrDefault(n,0)+1);
         }
 
-        // corner case: if there is only one number in nums, we need the bucket has index 1.
-        List<Integer>[] bucket = new List[nums.length+1];
-        for(int n:map.keySet()){
-            int freq = map.get(n);
-            if(bucket[freq]==null)
-                bucket[freq] = new LinkedList<>();
-            bucket[freq].add(n);
+        TreeMap<Integer, List<Integer>> freqMap = new TreeMap<>();
+        for(int num : map.keySet()){
+           int freq = map.get(num);
+           if(!freqMap.containsKey(freq)){
+               freqMap.put(freq, new LinkedList<>());
+           }
+           freqMap.get(freq).add(num);
         }
 
-        List<Integer> res = new LinkedList<>();
-        for(int i=bucket.length-1; i>0 && k>0; --i){
-            if(bucket[i]!=null){
-                List<Integer> list = bucket[i]; 
-                res.addAll(list);
-                k-= list.size();
-            }
+        List<Integer> res = new ArrayList<>();
+        while(res.size()<k){
+            Map.Entry<Integer, List<Integer>> entry = freqMap.pollLastEntry();
+            res.addAll(entry.getValue());
         }
-
         return res;
     }
 }
