@@ -1,16 +1,44 @@
 public class Solution {
     public void wiggleSort(int[] nums) {
-        int l = nums.length;
-        if(l == 0)  return;
-        int[] tmp = new int[l];
-        Arrays.sort(nums);
-        int j = l - 1;
-        for(int i = 1; i < l; i += 2, j--) {
-            tmp[i] = nums[j];
+        int median = findKthLargest(nums, (nums.length + 1) / 2);
+        int n = nums.length;
+
+        int left = 0, i = 0, right = n - 1;
+
+        while (i <= right) {
+
+            if (nums[newIndex(i,n)] > median) {
+                swap(nums, newIndex(left++,n), newIndex(i++,n));
+            }
+            else if (nums[newIndex(i,n)] < median) {
+                swap(nums, newIndex(right--,n), newIndex(i,n));
+            }
+            else {
+                i++;
+            }
         }
-        for(int i = 0; i < l; i += 2, j--) {
-            tmp[i] = nums[j];
+
+
+    }
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
+        for(int i : nums) {
+            pq.add(i);
         }
-        for(int i = 0; i < l; i++)  nums[i] = tmp[i];
+        int ans = 0;
+        for(int i = 0; i < nums.length - k + 1; i++) {
+            ans = pq.poll();
+        }
+        return ans;
+    }
+    
+    public void swap(int[] num, int i, int j) {
+        int tmp = num[i];
+        num[i] = num[j];
+        num[j] = tmp;
+    }
+
+    private int newIndex(int index, int n) {
+        return (1 + 2*index) % (n | 1);
     }
 }
