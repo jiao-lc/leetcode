@@ -1,25 +1,30 @@
 public class Solution {
-    public int findKthLargest(int[] nums, int k) {
-        int a = nums[0];
-        return quick(nums, 0, nums.length - 1, k);
+  public int findKthLargest(int[] a, int k) {
+    int n = a.length;
+    int p = quickSelect(a, 0, n - 1, n - k + 1);
+    return a[p];
+  }
+  // return the index of the kth smallest number
+  int quickSelect(int[] a, int lo, int hi, int k) {
+    int i = lo, j = hi, pivot = a[hi];
+    while (i < j) {
+      if (a[i++] > pivot) swap(a, --i, --j);
     }
-    public int quick(int[] n, int s, int e, int k) {
-        if(s == e)  return n[s];
-        int m = n[s];
-        int i = s + 1, j = e;
-        while(i + 1 < j) {
-            while(i + 1 < j && n[j] < m) j--;
-            while(i + 1 < j && n[i] >= m) i++;
-            swap(n, i, j);
-        }
-        swap(n, s, i);
-        if(i == k)  return m;
-        if(i > k)  return quick(n, s, i - 1, k);
-        else return quick(n, i + 1, e, k);
-    }
-    public void swap(int[] n, int i, int j) {
-        int sum = n[i] + n[j];
-        n[i] = sum - n[i];
-        n[j] = sum - n[j];
-    }
+    swap(a, i, hi);
+    // count the nums that are <= pivot from lo
+    int m = i - lo + 1;
+    // pivot is the one!
+    if (m == k)     return i;
+    // pivot is too big, so it must be on the left
+    else if (m > k) return quickSelect(a, lo, i - 1, k);
+    // pivot is too small, so it must be on the right
+    else            return quickSelect(a, i + 1, hi, k - m);
+  }
+
+  void swap(int[] a, int i, int j) {
+    int tmp = a[i];
+    a[i] = a[j];
+    a[j] = tmp;
+  }
+
 }
