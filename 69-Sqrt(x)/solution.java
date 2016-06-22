@@ -1,12 +1,13 @@
 public class Solution {
     public int mySqrt(int x) {
-        int s = 0, e = x;
-        while(s < e) {
+        if(x <= 1)  return x;
+        int s = 1, e = x;
+        while(s + 1 < e) {
             int m = s + (e - s) / 2;
-            if(m * m == x)  return m;
-            if(m * m > x)  e = m - 1;
+            if(m == x / m)  return m;
+            if(m > x / m)  e = m;
             else s = m;
         }
-        return e;
+        return s;
     }
 }
