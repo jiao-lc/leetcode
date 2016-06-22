@@ -24,21 +24,6 @@ public class Solution {
         for(int i = start; i <= end; i++) {
             List<TreeNode> lefttree = getTreeNode(start, i - 1);
             List<TreeNode> righttree = getTreeNode(i + 1, end);
-            if(lefttree == null) {
-                for(TreeNode node : righttree) {
-                    TreeNode root = new TreeNode(i);
-                    root.right = node;
-                    res.add(root);
-                }
-            }
-            if(righttree == null) {
-                for(TreeNode node : lefttree) {
-                    TreeNode root = new TreeNode(i);
-                    root.left = node;
-                    res.add(root);
-                }
-            }
-            if(lefttree != null && righttree != null) {
                 for(TreeNode l : lefttree) {
                     for(TreeNode r : righttree) {
                         TreeNode root = new TreeNode(i);
@@ -47,7 +32,6 @@ public class Solution {
                         res.add(root);
                     }
                 }
-            }
         }
         return res;
     }
