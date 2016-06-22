@@ -1,11 +1,5 @@
 public class Solution {
     public boolean isPowerOfThree(int n) {
-        if(n <= 0)  return false;
-        int sum = 0;
-        while(n > 1) {
-            if(n % 3 != 0)  return false;
-            n = n / 3;
-        }
-        return true;
+        return Integer.toString(n, 3).matches("10*");
     }
 }
