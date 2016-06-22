@@ -6,7 +6,7 @@ public class Solution {
         Arrays.fill(step, Integer.MAX_VALUE);
         step[0] = 0;
         for(int i = 0; i < len; i++) {
-            for(int j = 1; j <= nums[i]; j++)
+            for(int j = 1; j <= nums[i] && i + j < len; j++)
                 step[i + j] = Math.min(step[i + j], step[i] + 1);
         }
         return step[len - 1];
