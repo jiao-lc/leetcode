@@ -8,31 +8,45 @@
  * }
  */
 public class Solution {
-    public List<TreeNode> generateTrees(int n) {
-        List<TreeNode> res = new ArrayList<TreeNode>();
-        if(n == 0)  return res;
-        res = getTreeNode(1, n);
-        return res;
+    public TreeNode[] recursion(int s, int e, int[] dp){
+        TreeNode[] roots = null;
+        int curlen = 0;
+        if(s > e){
+            roots = new TreeNode[1];
+            roots[0] = null;
+            return roots;
+        }
+        roots = new TreeNode[dp[e - s + 1]];
+        for(int i = s; i <= e; i++){
+            TreeNode[] lefts = recursion(s, i - 1, dp);
+            TreeNode[] rights = recursion(i + 1, e, dp);
+            for(TreeNode left : lefts){
+                for(TreeNode right : rights){
+                    TreeNode root = new TreeNode(i);
+                    root.left = left;
+                    root.right = right;
+                    roots[curlen++] = root;
+                }
+            }
+        }
+        return roots;
     }
-    
-    public List<TreeNode> getTreeNode(int start, int end) {
-        List<TreeNode> res = new ArrayList<TreeNode>();
-        if(start > end) {
-            res.add(null);
+    public List<TreeNode> generateTrees(int n) {
+        if(n == 0)
+            return new ArrayList<TreeNode>();
+        else{
+            int[] dp = new int[n + 1];
+            dp[0] = 1;
+            dp[1] = 1;
+            for(int i = 2; i <= n; i++)
+                for(int j = 1; j <= i; j++)
+                    dp[i] += dp[j - 1] * dp[i - j];
+            TreeNode[] resarr =  recursion(1, n, dp);
+            List<TreeNode> res = new ArrayList<>();
+            for(TreeNode node : resarr){
+                res.add(node);
+            }
             return res;
         }
-        for(int i = start; i <= end; i++) {
-            List<TreeNode> lefttree = getTreeNode(start, i - 1);
-            List<TreeNode> righttree = getTreeNode(i + 1, end);
-                for(TreeNode l : lefttree) {
-                    for(TreeNode r : righttree) {
-                        TreeNode root = new TreeNode(i);
-                        root.left = l;
-                        root.right = r;
-                        res.add(root);
-                    }
-                }
-        }
-        return res;
     }
 }
