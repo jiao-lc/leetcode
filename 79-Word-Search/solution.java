@@ -1,34 +1,34 @@
 public class Solution {
     public boolean exist(char[][] board, String word) {
-        if(board.length == 0 || board[0].length == 0)   return false;
-        int m = board.length, n = board[0].length;
-        boolean[][] used = new boolean[m][n];
-        char[] arr = word.toCharArray();
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(board[i][j] == arr[0]) {
-                    used[i][j] = true;
-                    if(dfs(board,i,j,used,arr,1)) return true;
-                    used[i][j] = false;
+        if (word == null || word.length() == 0) {
+            return true;
+        }
+        char[] chs = word.toCharArray();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if(dfs(board, chs, 0, i, j)) {
+                    return true;
                 }
             }
         }
         return false;
     }
-    
-    public boolean dfs(char[][] board, int i, int j, boolean[][] used, char[] arr, int indx) {
-        if(indx == arr.length)  return true;
-        boolean res = false;
-        int[][] step = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        for(int k = 0; k < 4; k++) {
-            int r = i + step[k][0];
-            int c = j + step[k][1];
-            if(r >= 0 && r < board.length && c >= 0 && c < board[0].length && board[r][c] == arr[indx] && !used[r][c]){
-                used[r][c] = true;
-                res = res || dfs(board, r, c, used, arr, indx + 1);
-                used[r][c] = false;
-            }
+
+    private boolean dfs(char[][] board, char[] words, int idx, int x, int y) {
+        if (idx == words.length) {
+            return true;
+        } 
+        if (x < 0 || x == board.length || y < 0 || y == board[0].length) {
+            return false;
         }
-        return res;
+        if (board[x][y] != words[idx]) {
+            return false;
+        }
+        board[x][y] ^= 256;
+        boolean exist = dfs(board, words, idx + 1, x, y + 1) ||
+        dfs(board, words, idx + 1, x, y - 1) || dfs(board, words, idx + 1, x + 1, y) ||
+        dfs(board, words, idx + 1, x - 1, y) ;
+        board[x][y] ^= 256;
+        return exist;
     }
 }
