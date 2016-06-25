@@ -6,18 +6,16 @@ public class Solution {
         if(divisor == -1)   return -dividend;
         int sign = -1;  // -
         if(dividend > 0 && divisor > 0 || dividend < 0 && divisor < 0) sign = 1; // +
-        dividend = Math.abs(dividend);
-        divisor = Math.abs(divisor);
-        int ans = 0;
-        int tmp = divisor;
-        while(dividend > divisor) {
-            divisor <<= 1;
-            ans++;
+        long a = Math.abs((long)dividend);
+        long b = Math.abs((long)divisor);
+        int res = 0;
+        while(a >= b) {
+            long c = b;
+            for(int i = 0; a >= c; c <<= 1, i++) {
+                a -= c;
+                res += 1 << i;
+            }
         }
-        int i = 0;
-        while(divisor > dividend) {
-            divisor -= tmp; i++;
-        }
-        return sign * ((1 << ans) - i);
+        return (sign == 1) ? res : -res;
     }
 }
