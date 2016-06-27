@@ -4,7 +4,7 @@ public class Solution {
         int[] num = new int[tokens.length];
         int len = 0;
         for(String str : tokens) {
-            if(Character.isDigit(str.charAt(0))) {
+            if(!isSign(str)) {
                 num[len++] = Integer.parseInt(str);
             } else {
                 int a = num[--len];
@@ -19,5 +19,9 @@ public class Solution {
         if(str.equals("-")) return a - b;
         if(str.equals("*")) return a * b;
         return a / b;
+    }
+    public boolean isSign(String str) {
+        if(str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/"))    return true;
+        return false;
     }
 }
