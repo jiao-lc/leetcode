@@ -12,7 +12,7 @@ public class Solution {
                 num[len++] = calculate(b, a, str);
             }
         }
-        return num[len - 1];
+        return num[0];
     }
     public int calculate(int a, int b, String str) {
         if(str.equals("+")) return a + b;
