@@ -1,30 +1,32 @@
 public class Solution {
     public List<Integer> diffWaysToCompute(String input) {
-        List<Integer> res = new ArrayList<Integer>();
-        if(input == null || input.length() == 0)    return res;
-        res = helper(input, 0, input.length());
-        return res;
-    }
-    public List<Integer> helper(String s, int start, int end) {
-        List<Integer> res = new ArrayList<Integer>();
-        int digit = 0;
-        char sign = '+';
-        for(int i = start; i < end; i++) {
-            if(Character.isDigit(s.charAt(i))) {continue;}
-            sign = s.charAt(i);
-            List<Integer> left = helper(s, start, i);
-            List<Integer> right = helper(s, i + 1, end);
-            for(int l : left) {
-                for(int r : right) {
-                    switch(sign) {
-                        case '+' : res.add(l + r); break;
-                        case '-' : res.add(l - r); break;
-                        case '*' : res.add(l * r); break;
+        List<Integer> list=new ArrayList();
+        char[] c=input.toCharArray();
+        boolean sign=true;
+        for(int i=0;i<c.length;i++){
+            if(c[i]=='-'||c[i]=='+'||c[i]=='*'||c[i]=='/'){
+                List<Integer> l1 = diffWaysToCompute(input.substring(0,i));
+                List<Integer> l2 = diffWaysToCompute(input.substring(i+1,c.length));
+                for(int j=0;j<l1.size();j++){
+                    for(int k=0;k<l2.size();k++){
+                        switch(c[i]){
+                            case '-': list.add(l1.get(j)-l2.get(k)); break;
+                            case '+': list.add(l1.get(j)+l2.get(k)); break;
+                            case '*': list.add(l1.get(j)*l2.get(k)); break;
+                            case '/': list.add(l1.get(j)/l2.get(k)); break;
+                        }
                     }
                 }
+                sign=false;
             }
         }
-        if(res.size() == 0 && start < end) res.add(Integer.parseInt(s.substring(start, end)));
-        return res;
+        if(sign){
+            int sum=0;
+            for(char c1:input.toCharArray()){
+                sum=sum*10+c1-'0';
+            }
+            list.add(sum);
+        }
+        return list;
     }
 }
