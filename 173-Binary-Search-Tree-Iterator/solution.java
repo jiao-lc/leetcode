@@ -1,69 +1,56 @@
-/**
- * Definition for binary tree
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
-
 public class BSTIterator {
-TreeNode nodeIterator;
-public BSTIterator(TreeNode root) {
-    TreeNode node = root;
-    if (root == null) return;
-    while (node.left != null) {
-        node = node.left;
+
+    private TreeNode current;
+
+    public BSTIterator(TreeNode root) {
+        current = threadAllNodesOnLeftMostBranch(root);
     }
-    nodeIterator = node;
-    restructure(root);
-}
 
-/** @return whether we have a next smallest number */
-public boolean hasNext() {
-    return nodeIterator != null;
-}
+    /** @return whether we have a next smallest number */
+    public boolean hasNext() {
+        return current != null;
+    }
 
-/** @return the next smallest number */
-public int next() {
-    int next = nodeIterator.val;
-    nodeIterator = nodeIterator.right;
-    return next;
-}
+    /** @return the next smallest number */
+    public int next() {
+        int result = current.val;
 
-private void restructure(TreeNode node) {
-    TreeNode pre = null;
-    TreeNode temp = null;
-    while(node!=null){
-        if(node.left!=null){
-            // connect threading for node
-            temp = node.left;
-            while(temp.right!=null && temp.right != node)
-                temp = temp.right;
-            // the threading already exists
-            if(temp.right != null){
-                // add right pointer from 'pre' node to current node
-                pre.right = node;
-                pre = node;
-                node = node.right;
-            }else{
-                // construct the threading
-                temp.right = node;
-                node = node.left;
-            }
-        }else{
-            // add right pointer from 'pre' node to current node
-            if (pre != null) pre.right = node;
-            pre = node;
-            node = node.right;
+        current = current.right;
+        // If thread(current) returns false, it means that the left sub tree of current is visited.
+        // So there's no need to call threadAllNodesOnLeftMostBranch on current.
+        if (current != null && current.left != null && thread(current)) {
+            // current is already threaded in the if statement, skip it.
+            current = current.left;
+            current = threadAllNodesOnLeftMostBranch(current);
+        }
+
+        return result;
+    }
+
+    // Thread all nodes on TreeNode root's left-most branch until it reaches the last node on the branch,
+    // and return the last node
+    private TreeNode threadAllNodesOnLeftMostBranch(TreeNode root) {
+        while (root != null && root.left != null) {
+               thread(root);
+               root = root.left;
+        }
+
+        return root;
+    }
+
+    // Thread or unthread TreeNode root with its successor
+    // Return true if the operation turns out as a threading, and false if unthreading.
+    private boolean thread(TreeNode root) {
+        TreeNode predecessor  = root.left;
+        while (predecessor.right != null && predecessor.right != root) {
+            predecessor = predecessor.right;
+        }
+        if (predecessor.right == null) {
+            predecessor.right = root;
+            return true;
+        } else {
+            predecessor.right = null;
+            return false;
         }
     }
 }
-}
-
-/**
- * Your BSTIterator will be called like this:
- * BSTIterator i = new BSTIterator(root);
- * while (i.hasNext()) v[f()] = i.next();
- */
