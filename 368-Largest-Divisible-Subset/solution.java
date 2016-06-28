@@ -9,7 +9,7 @@ public class Solution {
             int max = 0;
             for(int j = 0; j < i; j++) {
             	if(nums[i] % nums[j] != 0) continue;
-                if(map.get(nums[j]).size() >= max) {
+                if(map.get(nums[j]).size() > max) {
                 	List<Integer> tmp = new ArrayList<>(map.get(nums[j]));
                     max = tmp.size();
                     tmp.add(nums[i]);
