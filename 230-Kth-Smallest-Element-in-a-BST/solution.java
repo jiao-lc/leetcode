@@ -9,17 +9,18 @@
  */
 public class Solution {
     public int kthSmallest(TreeNode root, int k) {
-        List<Integer> arr = new ArrayList<Integer>();
+        int cnt = 0, res = 0;
         Stack<TreeNode> stack = new Stack<TreeNode>();
-        while((!stack.empty() || root != null) && arr.size() < k) {
+        while((!stack.empty() || root != null) && cnt < k) {
             while(root != null){
                 stack.push(root);
                 root = root.left;
             }
             root = stack.pop();
-            arr.add(root.val);
+            res = root.val;
+            cnt++;
             root = root.right;
         }
-        return arr.get(k - 1);
+        return res;
     }
 }
