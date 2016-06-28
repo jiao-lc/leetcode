@@ -9,7 +9,8 @@ public class Solution {
         if(z < 0)   return false;
         boolean res = false;
         for(int i = start; i < v.length; i++) {
-            res = res || combine(v, start, z - v[i]);
+            if(v[i] == 0)   continue;
+            res = res || combine(v, i, z - v[i]);
         }
         return res;
     }
