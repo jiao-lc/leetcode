@@ -9,30 +9,57 @@
  */
 
 public class BSTIterator {
-    List<TreeNode> arr = new ArrayList<TreeNode>();
-    public BSTIterator(TreeNode root) {
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        while(!stack.empty() || root != null) {
-            while(root != null) {
-                stack.push(root);
-                root = root.left;
+TreeNode nodeIterator;
+public BSTIterator(TreeNode root) {
+    TreeNode node = root;
+    if (root == null) return;
+    while (node.left != null) {
+        node = node.left;
+    }
+    nodeIterator = node;
+    restructure(root);
+}
+
+/** @return whether we have a next smallest number */
+public boolean hasNext() {
+    return nodeIterator != null;
+}
+
+/** @return the next smallest number */
+public int next() {
+    int next = nodeIterator.val;
+    nodeIterator = nodeIterator.right;
+    return next;
+}
+
+private void restructure(TreeNode node) {
+    TreeNode pre = null;
+    TreeNode temp = null;
+    while(node!=null){
+        if(node.left!=null){
+            // connect threading for node
+            temp = node.left;
+            while(temp.right!=null && temp.right != node)
+                temp = temp.right;
+            // the threading already exists
+            if(temp.right != null){
+                // add right pointer from 'pre' node to current node
+                pre.right = node;
+                pre = node;
+                node = node.right;
+            }else{
+                // construct the threading
+                temp.right = node;
+                node = node.left;
             }
-            root = stack.pop();
-            arr.add(root);
-            root = root.right;
+        }else{
+            // add right pointer from 'pre' node to current node
+            if (pre != null) pre.right = node;
+            pre = node;
+            node = node.right;
         }
     }
-
-    /** @return whether we have a next smallest number */
-    public boolean hasNext() {
-        return arr.size() != 0;
-    }
-
-    /** @return the next smallest number */
-    public int next() {
-        TreeNode node = arr.remove(0);
-        return node.val;
-    }
+}
 }
 
 /**
