@@ -5,7 +5,7 @@ public class Solution {
         return z % gcd(x, y) == 0;
     }
     public int gcd(int x, int y) {
-        if(x == y)  return x;
+        if(x == y || x % y == 0 || y % x == 0)  return Math.min(x, y);
         if(x > y) return gcd(x % y, y);
         else return gcd(y % x, x);
     }
