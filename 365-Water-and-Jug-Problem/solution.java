@@ -1,12 +1,8 @@
 public class Solution {
-    public boolean canMeasureWater(int x, int y, int z) {
-        if (x + y < z)  return false;
-        if(x == z || y == z || x + y == z)  return true;
-        return z % gcd(x, y) == 0;
+    private int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
     }
-    public int gcd(int x, int y) {
-        if(x == y || x % y == 0 || y % x == 0)  return Math.min(x, y);
-        if(x > y) return gcd(x % y, y);
-        else return gcd(y % x, x);
+    public boolean canMeasureWater(int x, int y, int z) {
+        return z == 0 || (z <= x + y && z % gcd(x, y) == 0);
     }
 }
