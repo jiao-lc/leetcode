@@ -1,17 +1,12 @@
 public class Solution {
     public boolean canMeasureWater(int x, int y, int z) {
-        int[] v = new int[3];
-        v[0] = x; v[1] = y; v[2] = Math.abs(x - y);
-        return combine(v, 0, z);
+        if (x + y < z)  return false;
+        if(x == z || y == z || x + y == z)  return true;
+        return z % gcd(x, y) == 0;
     }
-    public boolean combine(int[] v, int start, int z) {
-        if(z == 0)  return true;
-        if(z < 0)   return false;
-        boolean res = false;
-        for(int i = start; i < v.length; i++) {
-            if(v[i] == 0)   continue;
-            res = res || combine(v, i, z - v[i]);
-        }
-        return res;
+    public int gcd(int x, int y) {
+        if(x == y)  return x;
+        if(x > y) return gcd(x % y, y);
+        else return gcd(y % x, x);
     }
 }
