@@ -1,36 +1,53 @@
 public class Solution {
-class Node{
-    int val, leftSum = 0, count = 0;
-    Node left, right;
-    public Node(int val){
-        this.val = val;
-    }
-}
+//Trying to use Binary Indexed Tree to solve this problem
+//Time complexity is O(Nlog(N)) which is better than Binary Search Tree solution
+//Need to build an array with the lenght of (Max-Min), which performs worth than BST solution
 public List<Integer> countSmaller(int[] nums) {
-    Integer[] count = new Integer[nums.length];
-    if(nums.length == 0){
-        return Arrays.asList(count);
+    List<Integer> result = new ArrayList<Integer>();
+    if(nums.length==0){
+        return result;
     }
-    Node root = new Node(nums[nums.length - 1]);
-    for(int i = nums.length - 1; i >= 0; i--){
-        count[i] = insert(root, nums[i]);
-    }
-    return Arrays.asList(count);
-}
-private int insert(Node node, int num){
-    int sum = 0;
-    while(node.val != num){
-        if(node.val > num){
-            if(node.left == null) node.left = new Node(num);
-            node.leftSum++;
-            node = node.left;
-        }else{
-            sum += node.leftSum + node.count;
-            if(node.right == null) node.right = new Node(num);
-            node = node.right;
+    else{
+        //Firstly, we make all the numbers in the array to be non-negative by num[i] = num[i]-min
+        int min = Integer.MAX_VALUE;
+        for(int x : nums){
+            min = Math.min(x,min);
         }
+        int max = Integer.MIN_VALUE;
+        for(int i = 0; i<nums.length; i++){
+            nums[i] -= min;
+            max = Math.max(nums[i],max);
+        }
+        //Then build the array from 0 to max to realize the Binary Indexed Tree
+        //We traverse from the rightmost side towards leftmost side
+        //When we reach a number num, array[num] update by 1
+        int[] BIT = new int[max+1];
+        for(int i = nums.length-1; i>=0; i--){
+            result.add(getSum( BIT, nums[i]-1));
+            update( BIT, nums[i]);
+        }
+        //Then we need to reverse the result List cause it was built in reversed order
+        Collections.reverse(result);
+        return result;
     }
-    node.count++;
-    return sum + node.leftSum;
+}
+private void update( int[] BIT, int val){
+    int fakeIndex = val+1;
+    while(fakeIndex<=BIT.length){
+        BIT[fakeIndex-1] += 1;
+        fakeIndex += fakeIndex&(-fakeIndex);
+    }
+}
+private int getSum(int[] BIT, int val){
+    if(val < 0){
+        return 0;
+    }
+    int sum = 0;
+    int fakeIndex = val+1;
+    while(fakeIndex > 0){
+        sum += BIT[fakeIndex-1];
+        fakeIndex -= fakeIndex&(-fakeIndex);
+    }
+    return sum;
 }
 }
