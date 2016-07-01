@@ -1,56 +1,36 @@
 public class Solution {
-    //merge sort
-    public int[] count;
-    public List<Integer> countSmaller(int[] nums) {
-        List<Integer> res = new ArrayList<Integer>();
-        count = new int[nums.length];
-        int[] indx = new int[nums.length];
-        for(int i = 0; i < nums.length; i++) {
-            indx[i] = i;
-        }
-        mergeSort(nums, indx, 0, nums.length - 1);
-        for(int i = 0; i < nums.length; i++) {
-            res.add(count[i]);
-        }
-        return res;
+public List<Integer> countSmaller(int[] nums) {
+    List<Integer> res = new ArrayList<>(nums.length);
+    List<Integer> index = new ArrayList<>(nums.length);
+
+    for (int i = nums.length - 1; i >= 0; i--) {
+        res.add(0);
+        index.add(i);
     }
-    
-    public void mergeSort(int[] nums, int[] indx, int start, int end) {
-        if(start >= end) return;
-        int mid = (start + end) / 2;
-        mergeSort(nums, indx, start, mid);
-        mergeSort(nums, indx, mid + 1, end);
-        merge(nums, indx, start, end);
-    }
-    public void merge(int[] nums, int[] indx, int start, int end) {
-        int mid = (start + end) / 2;
-        int left_index = start;
-        int right_index = mid+1;
-        int rightcount = 0;     
-        int[] new_indexes = new int[end - start + 1];
-        int sort_index = 0;
-        while(left_index <= mid && right_index <= end) {
-            if(nums[indx[left_index]] <= nums[indx[right_index]]) {
-                new_indexes[sort_index] = indx[left_index];
-                count[indx[left_index]] += rightcount;
-                left_index++;
+
+    countSmallerSub(nums, index, 1 << 31, res);
+
+    return res;
+}
+
+private void countSmallerSub(int[] nums, List<Integer> index, int mask, List<Integer> res) {
+    if (mask != 0 && index.size() > 1) {
+        List<Integer> highGroup = new ArrayList<>(index.size());
+        List<Integer> lowGroup = new ArrayList<>(index.size());
+
+        int highBit = (mask < 0 ? 0 : mask);
+
+        for (int i = 0; i < index.size(); i++) {
+            if ((nums[index.get(i)] & mask) == highBit) {
+                res.set(index.get(i), res.get(index.get(i)) + lowGroup.size());
+                highGroup.add(index.get(i));
             } else {
-                new_indexes[sort_index] = indx[right_index];
-                rightcount++;
-                right_index++;
+                lowGroup.add(index.get(i));
             }
-            sort_index++;
         }
-        while(left_index <= mid) {
-            new_indexes[sort_index++] = indx[left_index];
-            count[indx[left_index]] += rightcount;
-            left_index++;
-        }
-        while(right_index <= end) {
-            new_indexes[sort_index++] = indx[right_index++];
-        }
-        for(int i = start; i <= end; i++){
-            indx[i] = new_indexes[i - start];
-        }
+
+        countSmallerSub(nums, lowGroup, mask >>> 1, res);
+        countSmallerSub(nums, highGroup, mask >>> 1, res);
     }
+}
 }
