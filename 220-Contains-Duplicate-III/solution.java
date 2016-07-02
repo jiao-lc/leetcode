@@ -1,6 +1,7 @@
 public class Solution {
     public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
-        if(nums.length == 0 || k <= 0)    return false;
+        if (k < 1 || t < 0) return false;
+        t = Math.abs(t);
         Map<Long, Long> map = new HashMap<>();
         for(int i = 0; i < nums.length; i++) {
             long remapped = (long)nums[i] - Integer.MIN_VALUE;
