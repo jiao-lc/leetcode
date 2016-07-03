@@ -10,14 +10,14 @@ public class Solution {
         for(int i = 2; i < len - 1; i++) {
             val[i] = Math.max(val[i - 1], val[i - 2] + nums[i]);
         }
-        int tmp = Math.max(val[len - 2], val[len - 1]);
+        int tmp = Math.max(val[len - 2], val[len - 3]);
         
         val[0] = nums[1];
-        val[1] = nums[2];
+        val[1] = Math.max(nums[1], nums[2]);
         for(int i = 2; i < len - 1; i++) {
             val[i] = Math.max(val[i -1 ], val[i - 2] + nums[i + 1]);
         }
-        int tmp2 = Math.max(val[len - 2], val[len - 1]);
+        int tmp2 = Math.max(val[len - 2], val[len - 3]);
         return Math.max(tmp, tmp2);
     }
 }
