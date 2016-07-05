@@ -19,24 +19,19 @@ public class Solution {
             }
         }
         int max = Integer.MIN_VALUE;
-        for(int r1 = 0; r1 < m; r1++) {
-            for(int c1 = 0; c1 < n; c1 ++) {
-                for(int r2 = r1; r2 < m; r2++) {
-                    for(int c2 = c1; c2 < n; c2++) {
-                        int tmp = areas[r2][c2];
-                        if(r1 > 0) {
-                            tmp -= areas[r1 - 1][c2];
-                        }
-                        if(c1 > 0) {
-                            tmp -= areas[r2][c1 - 1];
-                        }
-                        if(c1 > 0 && r1 > 0) {
-                            tmp += areas[r1 - 1][c1 - 1];
-                        }
-                        if(tmp <= k) {
-                            max = Math.max(max, tmp);
-                        }
-                    }
+       
+        for (int r1 = 0; r1 < m; r1++) {
+            for (int r2 = r1; r2 < m; r2++) {
+                TreeSet<Integer> tree = new TreeSet<>();
+                tree.add(0);    // padding
+                for (int c = 0; c < n; c++) {
+                    int area = areas[r2][c];
+                    if (r1-1 >= 0)
+                        area -= areas[r1-1][c];
+                    Integer ceiling = tree.ceiling(area - k);
+                    if (ceiling != null)
+                        max = Math.max(max, area - ceiling);
+                    tree.add(area);
                 }
             }
         }
