@@ -1,20 +1,20 @@
 public class Solution {
-public boolean isScramble(String s1, String s2) {
-    int n = s1.length();
-    if (n == 1) return s1.equals(s2);
-    int[] map1 = new int[128], map2 = new int[128];
-    for (int i = 0, cnt1 = 0, cnt2 = 0; i < n-1; i++) {
-        if (map1[s1.charAt(i)]++ < 0) cnt1++;
-        if (map1[s2.charAt(i)]-- > 0) cnt1++;
-        if (cnt1 == i+1 &&
-            isScramble(s1.substring(0, cnt1), s2.substring(0, cnt1)) && 
-            isScramble(s1.substring(cnt1), s2.substring(cnt1))) return true;
-        if (map2[s1.charAt(i)]++ < 0) cnt2++;
-        if (map2[s2.charAt(n-1-i)]-- > 0) cnt2++;
-        if (cnt2 == i+1 &&
-            isScramble(s1.substring(0, cnt2), s2.substring(n-cnt2)) &&
-            isScramble(s1.substring(cnt2), s2.substring(0, n-cnt2))) return true;
+    public boolean isScramble(String s1, String s2) {
+        if (s1.equals(s2)) return true; 
+        
+        int[] letters = new int[26];
+        for (int i=0; i<s1.length(); i++) {
+            letters[s1.charAt(i)-'a']++;
+            letters[s2.charAt(i)-'a']--;
+        }
+        for (int i=0; i<26; i++) if (letters[i]!=0) return false;
+    
+        for (int i=1; i<s1.length(); i++) {
+            if (isScramble(s1.substring(0,i), s2.substring(0,i)) 
+             && isScramble(s1.substring(i), s2.substring(i))) return true;
+            if (isScramble(s1.substring(0,i), s2.substring(s2.length()-i)) 
+             && isScramble(s1.substring(i), s2.substring(0,s2.length()-i))) return true;
+        }
+        return false;
     }
-    return false;
-}
 }
