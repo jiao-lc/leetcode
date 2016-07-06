@@ -30,6 +30,7 @@ public class LRUCache {
     public void set(int key, int value) {
         if(map.containsKey(key)) {
             Node old = map.get(key);
+            old.val = value;
             remove(old);
             setHead(old);
         } else {
@@ -45,28 +46,29 @@ public class LRUCache {
         }
     }
     
-    public void remove(Node node) {
-        if(node.next != null) {
-            node.prev.next = node.next;
-        } else {
-            tail = node.prev;
+    public void remove(Node n) {
+        if(n.prev != null){
+            n.prev.next = n.next;
+        }else{
+            head = n.next;
         }
-        if(node.prev != null) {
-            node.next.prev = node.prev;
-        } else {
-            head = node.next;
+        if(n.next != null){
+            n.next.prev = n.prev;
+        }else{
+            tail = n.prev;
         }
     }
     
-    public void setHead(Node node) {
+    public void setHead(Node n){
+        n.next = head;
+        n.prev = null;
+        
         if(head != null){
-            node.next = head;
-            head.prev = node;
-            node.prev = null;
-            head = node;
-        } else {
-            head = node;
-            tail = node;
+            head.prev = n;
+        }
+        head = n;
+        if(tail == null){
+            tail = head;
         }
     }
 }
